@@ -2,7 +2,7 @@ defmodule PokerEvalTest do
   use ExUnit.Case
   doctest PokerEval
 
-  test "greets the world" do
-    assert PokerEval.hello() == :world
+  test "the truth" do
+    2 = 1 + 1
   end
 end
