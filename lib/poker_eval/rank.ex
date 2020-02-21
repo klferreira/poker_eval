@@ -12,18 +12,8 @@ defmodule PokerEval.Rank do
     high_card
   )a
 
-  def rank_hand(hand) do
-    cond do
-      {rank, cards} = straight_flush?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = four_of_a_kind?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = full_house?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = straight?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = flush?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = three_of_a_kind?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = two_pairs?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = pair?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-      {rank, cards} = high_card?(hand) -> {Enum.find_index(@ranks, &(&1 == rank)), rank, cards}
-    end
+  def get_rank_index(rank) do
+    Enum.find_index(@ranks, &(&1 == rank))
   end
 
   def straight_flush?(cards) do
