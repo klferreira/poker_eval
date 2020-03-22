@@ -5,7 +5,7 @@ defmodule PokerEval.RankTest do
   alias PokerEval.Card
   alias PokerEval.Rank
 
-  describe "get_four_of_a_kind" do
+  describe "four of a kind" do
 
     # @tag :pending
     test "returns nil if hand doesn't match rank" do
@@ -20,7 +20,7 @@ defmodule PokerEval.RankTest do
     end
 
     # @tag :pending
-    test "returns :four_of_a_kind when hand matches rank" do
+    test "succeeds when hand matches rank" do
       cards = [
         %Card{rank: 2, suit: "H"},
         %Card{rank: 5, suit: "S"},
@@ -31,5 +31,32 @@ defmodule PokerEval.RankTest do
       {:four_of_a_kind, 5} = Rank.four_of_a_kind?(cards)
     end
 
+  end
+
+  describe "three of a kind" do
+
+    test "returns nil if hand doesn't match rank" do
+      cards = [
+        %Card{rank: 2, suit: "S"},
+        %Card{rank: 4, suit: "D"},
+        %Card{rank: 4, suit: "C"},
+        %Card{rank: 6, suit: "C"},
+        %Card{rank: 1, suit: "H"},
+      ]
+      nil = Rank.three_of_a_kind?(cards)
+    end
+
+    # @tag :pending
+    test "succeeds when hand matches rank" do
+      cards = [
+        %Card{rank: 8, suit: "S"},
+        %Card{rank: 8, suit: "D"},
+        %Card{rank: 8, suit: "C"},
+        %Card{rank: 6, suit: "C"},
+        %Card{rank: 1, suit: "H"},
+      ]
+
+      {:three_of_a_kind, 8} = Rank.three_of_a_kind?(cards)
+    end
   end
 end
