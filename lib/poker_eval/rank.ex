@@ -37,11 +37,9 @@ defmodule PokerEval.Rank do
   end
 
   def four_of_a_kind?(cards) do
-    cards = n_of_a_kind?(cards, 4)
-
-    case cards do
+    case n_of_a_kind?(cards, 4) do
       nil -> nil
-      [ head | _ ] -> {:four_of_a_kind, head.rank}
+      [head | _] -> {:four_of_a_kind, head.rank}
     end
   end
 
@@ -58,7 +56,10 @@ defmodule PokerEval.Rank do
   end
 
   def three_of_a_kind?(cards) do
-    {:three_of_a_kind, cards}
+    case n_of_a_kind?(cards, 3) do
+      nil -> nil
+      [head | _] -> {:three_of_a_kind, head.rank}
+    end
   end
   def two_pairs?(cards) do
     {:two_pairs, cards}
