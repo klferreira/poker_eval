@@ -1,7 +1,5 @@
 defmodule PokerEval.Rank do
 
-  import Enum
-
   @ranks ~w(
     straight_flush
     four_of_a_kind
@@ -18,11 +16,11 @@ defmodule PokerEval.Rank do
     Enum.find_index(@ranks, &(&1 == rank))
   end
 
-  defp group_by_rank(cards), do: group_by(cards, &(&1.rank))
+  defp group_by(cards, field), do: Enum.group_by(cards, &(Map.get(&1, field)))
 
   defp n_of_a_kind?(cards, n) do
     cards
-      |> group_by_rank
+      |> group_by(:rank)
       |> Map.values
       |> Enum.find(&(length(&1) == n))
   end
@@ -48,7 +46,14 @@ defmodule PokerEval.Rank do
   end
 
   def flush?(cards) do
-    {:flush, cards}
+    cards
+      |> group_by(:suit)
+      |> Map.values
+      |> Enum.find(&(length(&1) >= 5))
+      |> case do
+        nil -> nil
+        xs -> {:flush, Map.get(List.last(xs), :rank)}
+      end
   end
 
   def straight?(cards) do

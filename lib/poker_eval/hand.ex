@@ -10,7 +10,7 @@ defmodule PokerEval.Hand do
         true <- length(Enum.uniq(cards)) == length(cards),
         parsed_cards <- Enum.map(cards, &Card.of/1),
         {:invalid_cards, []} <- {:invalid_cards, Keyword.get_values(parsed_cards, :error)},
-        parsed_hand <- Keyword.get_values(parsed_cards, :ok)
+        parsed_hand <- Keyword.get_values(parsed_cards, :ok) |> Enum.sort_by(&(&1.rank))
     do
       {:ok, parsed_hand}
     else
