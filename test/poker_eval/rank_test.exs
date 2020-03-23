@@ -59,4 +59,35 @@ defmodule PokerEval.RankTest do
       {:three_of_a_kind, 8} = Rank.three_of_a_kind?(cards)
     end
   end
+
+  describe "flush" do
+
+    # @tag :pending
+    test "returns nil if hand doesn't match rank" do
+      cards = [
+        %Card{rank: 7, suit: "S"},
+        %Card{rank: 14, suit: "S"},
+        %Card{rank: 9, suit: "S"},
+        %Card{rank: 4, suit: "S"},
+        %Card{rank: 2, suit: "D"},
+      ]
+
+      nil = Rank.flush?(cards)
+    end
+
+    # @tag :pending
+    test "succeeds when hand matches rank" do
+      cards = [
+        %Card{rank: 7, suit: "S"},
+        %Card{rank: 1, suit: "S"},
+        %Card{rank: 9, suit: "S"},
+        %Card{rank: 4, suit: "S"},
+        %Card{rank: 2, suit: "S"},
+      ]
+
+      {:flush, 9} = cards
+        |> Enum.sort_by(&(&1.rank))
+        |> Rank.flush?
+    end
+  end
 end
