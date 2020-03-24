@@ -35,6 +35,7 @@ defmodule PokerEval.RankTest do
 
   describe "three of a kind" do
 
+    # @tag :pending
     test "returns nil if hand doesn't match rank" do
       cards = [
         %Card{rank: 2, suit: "S"},
@@ -88,6 +89,48 @@ defmodule PokerEval.RankTest do
       {:flush, 9} = cards
         |> Enum.sort_by(&(&1.rank))
         |> Rank.flush?
+    end
+  end
+
+  describe "straigh" do
+
+    # @tag :pending
+    test "returns nil if hand doesn't match rank" do
+      cards = [
+        %Card{rank: 2, suit: "D"},
+        %Card{rank: 3, suit: "S"},
+        %Card{rank: 4, suit: "S"},
+        %Card{rank: 5, suit: "H"},
+        %Card{rank: 2, suit: "H"}
+      ]
+
+      nil = Rank.straight?(cards)
+    end
+
+    # @tag :pending
+    test "succeeds when hand matches rank" do
+      cards = [
+        %Card{rank: 2, suit: "D"},
+        %Card{rank: 3, suit: "S"},
+        %Card{rank: 4, suit: "S"},
+        %Card{rank: 5, suit: "H"},
+        %Card{rank: 6, suit: "H"}
+      ]
+
+      {:straight, 6} = Rank.straight?(cards)
+    end
+
+    # @tag :pending
+    test "succeeds when hand matches rank with ace low" do
+      cards = [
+        %Card{rank: 2, suit: "D"},
+        %Card{rank: 3, suit: "S"},
+        %Card{rank: 4, suit: "S"},
+        %Card{rank: 5, suit: "H"},
+        %Card{rank: 14, suit: "H"}
+      ]
+
+      {:straight, 5} = Rank.straight?(cards)
     end
   end
 end
