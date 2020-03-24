@@ -92,7 +92,7 @@ defmodule PokerEval.RankTest do
     end
   end
 
-  describe "straigh" do
+  describe "straight" do
 
     # @tag :pending
     test "returns nil if hand doesn't match rank" do

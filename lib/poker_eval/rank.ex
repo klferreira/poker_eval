@@ -57,7 +57,20 @@ defmodule PokerEval.Rank do
   end
 
   def straight?(cards) do
-    {:straight, cards}
+    cards = cards
+      |> Enum.map(&(&1.rank))
+      |> case do
+        [2, 3, 4, 5, 14] -> [1, 2, 3, 4, 5]
+        x -> x
+      end
+
+    with lo <- List.first(cards), hi <- List.last(cards),
+      seq <- Enum.to_list(lo..hi), true <- cards == seq
+    do
+      {:straight, hi}
+    else
+      _ -> nil
+    end
   end
 
   def three_of_a_kind?(cards) do
