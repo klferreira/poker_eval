@@ -133,4 +133,46 @@ defmodule PokerEval.RankTest do
       {:straight, 5} = Rank.straight?(cards)
     end
   end
+
+  describe "straight flush" do
+
+    # @tag :pending
+    test "returns nil if only flush" do
+      cards = [
+        %Card{rank: 4, suit: "D"},
+        %Card{rank: 10, suit: "D"},
+        %Card{rank: 3, suit: "D"},
+        %Card{rank: 11, suit: "D"},
+        %Card{rank: 9, suit: "D"},
+      ]
+
+      nil = Rank.straight_flush?(cards)
+    end
+
+    # @tag :pending
+    test "returns nil if only straight" do
+      cards = [
+        %Card{rank: 4, suit: "S"},
+        %Card{rank: 5, suit: "S"},
+        %Card{rank: 6, suit: "D"},
+        %Card{rank: 7, suit: "H"},
+        %Card{rank: 8, suit: "D"},
+      ]
+
+      nil = Rank.straight_flush?(cards)
+    end
+
+    # tag :pending
+    test "succeeds when hand matches rank" do
+      cards = [
+        %Card{rank: 4, suit: "S"},
+        %Card{rank: 5, suit: "S"},
+        %Card{rank: 6, suit: "S"},
+        %Card{rank: 7, suit: "S"},
+        %Card{rank: 8, suit: "S"},
+      ]
+
+      {:straight_flush, 8} = Rank.straight_flush?(cards)
+    end
+  end
 end

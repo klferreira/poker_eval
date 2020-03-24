@@ -26,9 +26,9 @@ defmodule PokerEval.Rank do
   end
 
   def straight_flush?(cards) do
-    with {:flush, cards} <- flush?(cards), {:straight, ^cards} <- straight?(cards)
+    with {:flush, hi} <- flush?(cards), {:straight, ^hi} <- straight?(cards)
     do
-      {:straight_flush, cards}
+      {:straight_flush, hi}
     else
       _ -> nil
     end
