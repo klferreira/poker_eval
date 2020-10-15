@@ -7,8 +7,9 @@ defmodule PokerEval.CardTest do
 
   describe "parse card" do
     test "parses all valid cards correctly" do
-      for c <- Util.full_deck() do
-        {:ok, _card} = Card.of(c)
+      for rank <- ~w(2 3 4 5 6 7 8 9 T J Q K A), suit <- ~w(C D H S) do
+        {:ok, card} = Card.of(rank <> suit)
+        card
       end
     end
 
