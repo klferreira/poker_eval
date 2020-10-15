@@ -117,6 +117,20 @@ defmodule Poker.RankTest do
     end
   end
 
+  describe "full_house/1" do
+    test "suceeds when hand matches rank" do
+      cards = [
+        %Card{rank: 8, suit: "S"},
+        %Card{rank: 8, suit: "D"},
+        %Card{rank: 8, suit: "C"},
+        %Card{rank: 2, suit: "C"},
+        %Card{rank: 2, suit: "H"}
+      ]
+
+      {:full_house, _cards} = Rank.full_house?(cards)
+    end
+  end
+
   describe "flush" do
     # @tag :pending
     test "returns nil if hand doesn't match rank" do

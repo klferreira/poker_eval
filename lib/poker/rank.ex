@@ -43,8 +43,10 @@ defmodule Poker.Rank do
   end
 
   def full_house?(cards) do
-    # {:full_house, cards}
-    nil
+    with {:three_of_a_kind, a} <- three_of_a_kind?(cards),
+         {:pair, _} <- Enum.filter(cards, fn c -> c.rank != a end) |> pair? do
+      {:full_house, cards}
+    end
   end
 
   def flush?(cards) do
@@ -87,7 +89,7 @@ defmodule Poker.Rank do
   def two_pairs?(cards) do
     case n_of_a_kind?(cards, 2) do
       [] -> nil
-      [[a | _], [b | _ ] | _] -> {:two_pair, a.rank, b.rank}
+      [[a | _], [b | _] | _] -> {:two_pair, a.rank, b.rank}
     end
   end
 
