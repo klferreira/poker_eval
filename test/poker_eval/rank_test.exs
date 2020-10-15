@@ -5,8 +5,64 @@ defmodule PokerEval.RankTest do
   alias PokerEval.Card
   alias PokerEval.Rank
 
-  describe "four of a kind" do
+  describe "high_card?/1" do
+    # @tag :pending
+    test "returns the highest card of the hand" do
+      high = %Card{rank: 10, suit: "H"}
 
+      cards = [
+        %Card{rank: 2, suit: "H"},
+        %Card{rank: 3, suit: "D"},
+        %Card{rank: 7, suit: "C"},
+        %Card{rank: 9, suit: "C"},
+        high
+      ]
+
+      {:high_card, high} == Rank.high_card?(cards)
+    end
+  end
+
+  describe "pair?/1" do
+    # @tag :pending
+    test "returns the highest pair of the hand" do
+      cards = [
+        %Card{rank: 2, suit: "H"},
+        %Card{rank: 2, suit: "D"},
+        %Card{rank: 7, suit: "C"},
+        %Card{rank: 7, suit: "D"},
+        %Card{rank: 10, suit: "C"}
+      ]
+      assert {:pair, 7} == Rank.pair?(cards)
+    end
+
+    test "returns nil if hand doesn't match rank" do
+      cards = [
+        %Card{rank: 2, suit: "H"},
+        %Card{rank: 3, suit: "D"},
+        %Card{rank: 7, suit: "C"},
+        %Card{rank: 8, suit: "D"},
+        %Card{rank: 10, suit: "C"}
+      ]
+      nil = Rank.pair?(cards)
+    end
+  end
+
+  describe "two_pair?/1" do
+    # @tag :pending
+    test "returns the two pairs of the hand" do
+      cards = [
+        %Card{rank: 2, suit: "H"},
+        %Card{rank: 2, suit: "D"},
+        %Card{rank: 3, suit: "C"},
+        %Card{rank: 3, suit: "D"},
+        %Card{rank: 10, suit: "C"}
+      ]
+
+      assert {:two_pair, 3, 2} = Rank.two_pairs?(cards)
+    end
+  end
+
+  describe "four_of_a_kind?/1" do
     # @tag :pending
     test "returns nil if hand doesn't match rank" do
       cards = [
@@ -16,6 +72,7 @@ defmodule PokerEval.RankTest do
         %Card{rank: 3, suit: "C"},
         %Card{rank: 10, suit: "H"}
       ]
+
       nil = Rank.four_of_a_kind?(cards)
     end
 
@@ -28,22 +85,21 @@ defmodule PokerEval.RankTest do
         %Card{rank: 5, suit: "C"},
         %Card{rank: 5, suit: "H"}
       ]
+
       {:four_of_a_kind, 5} = Rank.four_of_a_kind?(cards)
     end
-
   end
 
   describe "three of a kind" do
-
-    # @tag :pending
     test "returns nil if hand doesn't match rank" do
       cards = [
         %Card{rank: 2, suit: "S"},
         %Card{rank: 4, suit: "D"},
         %Card{rank: 4, suit: "C"},
         %Card{rank: 6, suit: "C"},
-        %Card{rank: 1, suit: "H"},
+        %Card{rank: 1, suit: "H"}
       ]
+
       nil = Rank.three_of_a_kind?(cards)
     end
 
@@ -54,7 +110,7 @@ defmodule PokerEval.RankTest do
         %Card{rank: 8, suit: "D"},
         %Card{rank: 8, suit: "C"},
         %Card{rank: 6, suit: "C"},
-        %Card{rank: 1, suit: "H"},
+        %Card{rank: 1, suit: "H"}
       ]
 
       {:three_of_a_kind, 8} = Rank.three_of_a_kind?(cards)
@@ -62,7 +118,6 @@ defmodule PokerEval.RankTest do
   end
 
   describe "flush" do
-
     # @tag :pending
     test "returns nil if hand doesn't match rank" do
       cards = [
@@ -70,7 +125,7 @@ defmodule PokerEval.RankTest do
         %Card{rank: 14, suit: "S"},
         %Card{rank: 9, suit: "S"},
         %Card{rank: 4, suit: "S"},
-        %Card{rank: 2, suit: "D"},
+        %Card{rank: 2, suit: "D"}
       ]
 
       nil = Rank.flush?(cards)
@@ -83,17 +138,17 @@ defmodule PokerEval.RankTest do
         %Card{rank: 1, suit: "S"},
         %Card{rank: 9, suit: "S"},
         %Card{rank: 4, suit: "S"},
-        %Card{rank: 2, suit: "S"},
+        %Card{rank: 2, suit: "S"}
       ]
 
-      {:flush, 9} = cards
-        |> Enum.sort_by(&(&1.rank))
-        |> Rank.flush?
+      {:flush, 9} =
+        cards
+        |> Enum.sort_by(& &1.rank)
+        |> Rank.flush?()
     end
   end
 
   describe "straight" do
-
     # @tag :pending
     test "returns nil if hand doesn't match rank" do
       cards = [
@@ -135,7 +190,6 @@ defmodule PokerEval.RankTest do
   end
 
   describe "straight flush" do
-
     # @tag :pending
     test "returns nil if only flush" do
       cards = [
@@ -143,7 +197,7 @@ defmodule PokerEval.RankTest do
         %Card{rank: 10, suit: "D"},
         %Card{rank: 3, suit: "D"},
         %Card{rank: 11, suit: "D"},
-        %Card{rank: 9, suit: "D"},
+        %Card{rank: 9, suit: "D"}
       ]
 
       nil = Rank.straight_flush?(cards)
@@ -156,7 +210,7 @@ defmodule PokerEval.RankTest do
         %Card{rank: 5, suit: "S"},
         %Card{rank: 6, suit: "D"},
         %Card{rank: 7, suit: "H"},
-        %Card{rank: 8, suit: "D"},
+        %Card{rank: 8, suit: "D"}
       ]
 
       nil = Rank.straight_flush?(cards)
@@ -169,7 +223,7 @@ defmodule PokerEval.RankTest do
         %Card{rank: 5, suit: "S"},
         %Card{rank: 6, suit: "S"},
         %Card{rank: 7, suit: "S"},
-        %Card{rank: 8, suit: "S"},
+        %Card{rank: 8, suit: "S"}
       ]
 
       {:straight_flush, 8} = Rank.straight_flush?(cards)
