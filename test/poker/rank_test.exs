@@ -1,9 +1,9 @@
-defmodule PokerEval.RankTest do
+defmodule Poker.RankTest do
   use ExUnit.Case
-  doctest PokerEval.Rank
+  doctest Poker.Rank
 
-  alias PokerEval.Card
-  alias PokerEval.Rank
+  alias Poker.Card
+  alias Poker.Rank
 
   describe "high_card?/1" do
     # @tag :pending
@@ -18,7 +18,7 @@ defmodule PokerEval.RankTest do
         high
       ]
 
-      {:high_card, high} == Rank.high_card?(cards)
+      assert {:high_card, high} == Rank.high_card?(cards)
     end
   end
 

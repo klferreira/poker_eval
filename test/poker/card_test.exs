@@ -1,9 +1,8 @@
-defmodule PokerEval.CardTest do
+defmodule Poker.CardTest do
   use ExUnit.Case
-  doctest PokerEval.Card
+  doctest Poker.Card
 
-  alias PokerEval.Util
-  alias PokerEval.Card
+  alias Poker.Card
 
   describe "parse card" do
     test "parses all valid cards correctly" do

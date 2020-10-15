@@ -1,4 +1,4 @@
-defmodule PokerEval.Rank do
+defmodule Poker.Rank do
   @ranks ~w(
     straight_flush
     four_of_a_kind

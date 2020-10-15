@@ -1,5 +1,5 @@
 defmodule Poker.Hand do
-  import PokerEval.Rank
+  import Poker.Rank
 
   defstruct cards: [], rank: nil
 

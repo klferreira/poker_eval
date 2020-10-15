@@ -1,10 +1,10 @@
-defmodule Game.Dealer do
-  import PokerEval.Util
+defmodule Poker.Dealer do
+  import Poker.Util
 
   defstruct deck: full_deck(), community_cards: []
 
   def new(community_cards \\ []) do
-    %Game.Dealer{community_cards: community_cards}
+    %Poker.Dealer{community_cards: community_cards}
   end
 
   def deal_hole_cards(dealer, player_count) do
@@ -13,7 +13,7 @@ defmodule Game.Dealer do
   end
 
   def deal_hole_cards(deck, player_count, holes) when player_count === length(holes) do
-    {:ok, holes, %Game.Dealer{deck: deck}}
+    {:ok, holes, %Poker.Dealer{deck: deck}}
   end
 
   def deal_hole_cards(deck, player_count, holes) do
@@ -33,7 +33,7 @@ defmodule Game.Dealer do
   def deal_community_cards(dealer, amount) do
     {community_cards, deck} = Enum.split(dealer.deck, amount)
 
-    %Game.Dealer{
+    %Poker.Dealer{
       deck: deck,
       community_cards: dealer.community_cards ++ community_cards
     }

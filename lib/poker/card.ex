@@ -1,6 +1,4 @@
-defmodule PokerEval.Card do
-
-  alias PokerEval.Card
+defmodule Poker.Card do
 
   @suits ~w(C D H S)
 
@@ -11,7 +9,7 @@ defmodule PokerEval.Card do
       {:ok, rank} <- parse_rank(first),
       {:ok, suit} <- parse_suit(last)
     do
-      {:ok, %Card{suit: suit, rank: rank}}
+      {:ok, %Poker.Card{suit: suit, rank: rank}}
     else
       err -> err
     end
