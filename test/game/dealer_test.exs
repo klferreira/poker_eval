@@ -1,8 +1,8 @@
-defmodule PokerEval.DealerTest do
+defmodule Game.DealerTest do
   use ExUnit.Case
-  doctest PokerEval.Dealer
+  doctest Game.Dealer
 
-  alias PokerEval.Dealer
+  alias Game.Dealer
   alias PokerEval.Card
 
   @full_deck_size 52
