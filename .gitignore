@@ -24,3 +24,7 @@ poker_eval-*.tar
 
 # Ignore Elixir LS
 .elixir_ls/
+
+worklog.exs
+
+.vscode
