@@ -11,6 +11,18 @@ defmodule Poker.Rank do
     high_card
   )a
 
+  def get_rank(hand, community) do
+    rank = rank_with(hand ++ community, get_ordered_ranks())
+    {:ok, rank, hand}
+  end
+
+  defp rank_with(hand, [rank | ranks]) do
+    case apply(PokerEval.Rank, :"#{rank}?", [hand]) do
+      {rank, _} -> rank
+      _ -> rank_with(hand, ranks)
+    end
+  end
+
   def get_ordered_ranks(), do: @ranks
 
   def get_rank_index(rank) do

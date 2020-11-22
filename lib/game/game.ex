@@ -52,7 +52,7 @@ defmodule Game do
 
     hands = players
       |> Enum.map(&Map.get(&1, :cards))
-      |> Enum.map(&Poker.Hand.get_rank(&1, dealer.community_cards))
+      |> Enum.map(&Poker.Rank.get_rank(&1, dealer.community_cards))
 
     IO.inspect(hands)
   end
