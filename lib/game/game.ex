@@ -1,18 +1,18 @@
 defmodule Game do
-
-  alias Poker.Dealer;
-  alias Game.Player;
+  alias Poker.Hand
+  alias Poker.Dealer
+  alias Game.Player
 
   def handle_call do
-    #IO.puts("#{player} is calling")
+    # IO.puts("#{player} is calling")
   end
 
   def handle_raise do
-    #IO.puts("#{player} is raising")
+    # IO.puts("#{player} is raising")
   end
 
   def handle_fold do
-    #IO.puts("#{player} is folding")
+    # IO.puts("#{player} is folding")
   end
 
   def handle_player_action(_player, action) do
@@ -23,18 +23,24 @@ defmodule Game do
     end
   end
 
+  def sort_hands_by_rank(hands),
+    do:
+      hands
+      |> Enum.group_by(&(elem(&1, 1)))
+      |> Enum.sort_by(fn {rank, _val} -> Poker.Hand.get_rank_index(rank) end, :asc)
+
   def start(players) do
     run_phase(players)
   end
 
   def run_phase(players) do
-
     # pre flop
 
     # deal cards
-    {:ok, hole_cards, dealer} = Dealer.deal_hole_cards(Dealer.new, length(players))
+    {:ok, hole_cards, dealer} = Dealer.deal_hole_cards(Dealer.new(), length(players))
 
-    players = hole_cards
+    players =
+      hole_cards
       |> Enum.zip(players)
       |> Enum.map(fn {cards, player} -> Player.set_cards(player, cards) end)
 
@@ -50,10 +56,12 @@ defmodule Game do
     dealer = Dealer.deal_community_cards(dealer)
     Enum.each(players, fn player -> handle_player_action(player, :call) end)
 
-    hands = players
+    sorted_hands =
+      players
       |> Enum.map(&Map.get(&1, :cards))
-      |> Enum.map(&Poker.Rank.get_rank(&1, dealer.community_cards))
+      |> Enum.map(&Poker.Hand.get_rank(&1, dealer.community_cards))
+      |> sort_hands_by_rank
 
-    IO.inspect(hands)
+    IO.inspect(sorted_hands)
   end
 end

@@ -13,7 +13,7 @@ defmodule Poker.Hand do
 
   def get_rank(hand, community) do
     with rank = rank_with(hand ++ community, @ordered_hands) do
-      {:ok, rank, hand}
+      {hand, rank}
     end
   end
 
