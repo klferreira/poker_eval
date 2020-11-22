@@ -1,5 +1,5 @@
-defmodule Poker.Rank do
-  @ranks ~w(
+defmodule Poker.Hand do
+  @ordered_hands ~w(
     straight_flush
     four_of_a_kind
     full_house
@@ -12,21 +12,20 @@ defmodule Poker.Rank do
   )a
 
   def get_rank(hand, community) do
-    rank = rank_with(hand ++ community, get_ordered_ranks())
-    {:ok, rank, hand}
+    with rank = rank_with(hand ++ community, @ordered_hands) do
+      {:ok, rank, hand}
+    end
   end
 
   defp rank_with(hand, [rank | ranks]) do
-    case apply(Poker.Rank, :"#{rank}?", [hand]) do
+    case apply(Poker.Hand, :"#{rank}?", [hand]) do
       {rank, _} -> rank
       _ -> rank_with(hand, ranks)
     end
   end
 
-  def get_ordered_ranks(), do: @ranks
-
   def get_rank_index(rank) do
-    Enum.find_index(@ranks, &(&1 == rank))
+    Enum.find_index(@ordered_hands, &(&1 == rank))
   end
 
   defp group_by(cards, field), do: Enum.group_by(cards, &Map.get(&1, field))

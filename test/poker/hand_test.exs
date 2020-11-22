@@ -1,9 +1,9 @@
-defmodule Poker.RankTest do
+defmodule Poker.HandTest do
   use ExUnit.Case
-  doctest Poker.Rank
+  doctest Poker.Hand
 
   alias Poker.Card
-  alias Poker.Rank
+  alias Poker.Hand
 
   describe "high_card?/1" do
     # @tag :pending
@@ -18,7 +18,7 @@ defmodule Poker.RankTest do
         high
       ]
 
-      assert {:high_card, high} == Rank.high_card?(cards)
+      assert {:high_card, high} == Hand.high_card?(cards)
     end
   end
 
@@ -32,7 +32,7 @@ defmodule Poker.RankTest do
         %Card{rank: 7, suit: "D"},
         %Card{rank: 10, suit: "C"}
       ]
-      assert {:pair, 7} == Rank.pair?(cards)
+      assert {:pair, 7} == Hand.pair?(cards)
     end
 
     test "returns nil if hand doesn't match rank" do
@@ -43,7 +43,7 @@ defmodule Poker.RankTest do
         %Card{rank: 8, suit: "D"},
         %Card{rank: 10, suit: "C"}
       ]
-      nil = Rank.pair?(cards)
+      nil = Hand.pair?(cards)
     end
   end
 
@@ -58,7 +58,7 @@ defmodule Poker.RankTest do
         %Card{rank: 10, suit: "C"}
       ]
 
-      assert {:two_pair, 3, 2} = Rank.two_pairs?(cards)
+      assert {:two_pair, 3, 2} = Hand.two_pairs?(cards)
     end
 
     test "returns nil if only one pair is present" do
@@ -70,7 +70,7 @@ defmodule Poker.RankTest do
         %Card{rank: 10, suit: "C"}
       ]
 
-      nil = Rank.two_pairs?(cards)
+      nil = Hand.two_pairs?(cards)
     end
   end
 
@@ -85,7 +85,7 @@ defmodule Poker.RankTest do
         %Card{rank: 10, suit: "H"}
       ]
 
-      nil = Rank.four_of_a_kind?(cards)
+      nil = Hand.four_of_a_kind?(cards)
     end
 
     # @tag :pending
@@ -98,7 +98,7 @@ defmodule Poker.RankTest do
         %Card{rank: 5, suit: "H"}
       ]
 
-      {:four_of_a_kind, 5} = Rank.four_of_a_kind?(cards)
+      {:four_of_a_kind, 5} = Hand.four_of_a_kind?(cards)
     end
   end
 
@@ -112,7 +112,7 @@ defmodule Poker.RankTest do
         %Card{rank: 1, suit: "H"}
       ]
 
-      nil = Rank.three_of_a_kind?(cards)
+      nil = Hand.three_of_a_kind?(cards)
     end
 
     # @tag :pending
@@ -125,7 +125,7 @@ defmodule Poker.RankTest do
         %Card{rank: 1, suit: "H"}
       ]
 
-      {:three_of_a_kind, 8} = Rank.three_of_a_kind?(cards)
+      {:three_of_a_kind, 8} = Hand.three_of_a_kind?(cards)
     end
   end
 
@@ -139,7 +139,7 @@ defmodule Poker.RankTest do
         %Card{rank: 2, suit: "H"}
       ]
 
-      {:full_house, _cards} = Rank.full_house?(cards)
+      {:full_house, _cards} = Hand.full_house?(cards)
     end
   end
 
@@ -154,7 +154,7 @@ defmodule Poker.RankTest do
         %Card{rank: 2, suit: "D"}
       ]
 
-      nil = Rank.flush?(cards)
+      nil = Hand.flush?(cards)
     end
 
     # @tag :pending
@@ -170,7 +170,7 @@ defmodule Poker.RankTest do
       {:flush, 9} =
         cards
         |> Enum.sort_by(& &1.rank)
-        |> Rank.flush?()
+        |> Hand.flush?()
     end
   end
 
@@ -185,7 +185,7 @@ defmodule Poker.RankTest do
         %Card{rank: 2, suit: "H"}
       ]
 
-      nil = Rank.straight?(cards)
+      nil = Hand.straight?(cards)
     end
 
     # @tag :pending
@@ -198,7 +198,7 @@ defmodule Poker.RankTest do
         %Card{rank: 6, suit: "H"}
       ]
 
-      {:straight, 6} = Rank.straight?(cards)
+      {:straight, 6} = Hand.straight?(cards)
     end
 
     # @tag :pending
@@ -211,7 +211,7 @@ defmodule Poker.RankTest do
         %Card{rank: 14, suit: "H"}
       ]
 
-      {:straight, 5} = Rank.straight?(cards)
+      {:straight, 5} = Hand.straight?(cards)
     end
   end
 
@@ -226,7 +226,7 @@ defmodule Poker.RankTest do
         %Card{rank: 9, suit: "D"}
       ]
 
-      nil = Rank.straight_flush?(cards)
+      nil = Hand.straight_flush?(cards)
     end
 
     # @tag :pending
@@ -239,7 +239,7 @@ defmodule Poker.RankTest do
         %Card{rank: 8, suit: "D"}
       ]
 
-      nil = Rank.straight_flush?(cards)
+      nil = Hand.straight_flush?(cards)
     end
 
     # tag :pending
@@ -252,7 +252,7 @@ defmodule Poker.RankTest do
         %Card{rank: 8, suit: "S"}
       ]
 
-      {:straight_flush, 8} = Rank.straight_flush?(cards)
+      {:straight_flush, 8} = Hand.straight_flush?(cards)
     end
   end
 end
