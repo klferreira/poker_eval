@@ -60,6 +60,18 @@ defmodule Poker.RankTest do
 
       assert {:two_pair, 3, 2} = Rank.two_pairs?(cards)
     end
+
+    test "returns nil if only one pair is present" do
+      cards = [
+        %Card{rank: 1, suit: "H"},
+        %Card{rank: 2, suit: "D"},
+        %Card{rank: 3, suit: "C"},
+        %Card{rank: 3, suit: "D"},
+        %Card{rank: 10, suit: "C"}
+      ]
+
+      nil = Rank.two_pairs?(cards)
+    end
   end
 
   describe "four_of_a_kind?/1" do

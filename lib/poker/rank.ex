@@ -17,7 +17,7 @@ defmodule Poker.Rank do
   end
 
   defp rank_with(hand, [rank | ranks]) do
-    case apply(PokerEval.Rank, :"#{rank}?", [hand]) do
+    case apply(Poker.Rank, :"#{rank}?", [hand]) do
       {rank, _} -> rank
       _ -> rank_with(hand, ranks)
     end
@@ -99,9 +99,10 @@ defmodule Poker.Rank do
   end
 
   def two_pairs?(cards) do
-    case n_of_a_kind?(cards, 2) do
-      [] -> nil
+    result = n_of_a_kind?(cards, 2)
+    case result do
       [[a | _], [b | _] | _] -> {:two_pair, a.rank, b.rank}
+      _ -> nil
     end
   end
 
