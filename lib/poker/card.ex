@@ -1,43 +1,47 @@
 defmodule Poker.Card do
 
-  @suits ~w(C D H S)
+  @ranks 2..14 |> Enum.to_list()
+  @suits ~w(clubs diamonds hearts spades)a
+
+  def ranks, do: @ranks
+  def suits, do: @suits
 
   defstruct rank: "", suit: ""
 
   def of(bin) do
-    with [first, last] <- split_card(bin),
-      {:ok, rank} <- parse_rank(first),
-      {:ok, suit} <- parse_suit(last)
-    do
-      {:ok, %Poker.Card{suit: suit, rank: rank}}
-    else
-      err -> err
+    card_regex = ~r/(.{1,2})([CDHS])/
+    case Regex.scan(card_regex, bin) do
+      [] -> %Poker.Card{rank: nil, suit: nil}
+      [[_, rank, suit]] -> %Poker.Card{rank: parse_rank(rank), suit: parse_suit(suit)}
     end
   end
 
-  defp split_card(bin) do
-    case bin
-      |> String.split("")
-      |> Enum.map(&String.upcase/1)
-      |> Enum.filter(&(String.length(&1) > 0)) do
-      [a, b] -> [a, b]
-      _ -> {:error, :invalid_card}
+  defp parse_suit("C"), do: :clubs
+  defp parse_suit("D"), do: :diamonds
+  defp parse_suit("H"), do: :hearts
+  defp parse_suit("S"), do: :spades
+  defp parse_suit(_), do: nil
+
+  defp parse_rank("J"), do: 11
+  defp parse_rank("Q"), do: 12
+  defp parse_rank("K"), do: 13
+  defp parse_rank("A"), do: 14
+  defp parse_rank(number) do
+    case Integer.parse(number) do
+      :error -> nil
+      {rank, _} ->
+        case rank > 1 and rank <= 10 do
+          false -> nil
+          true -> rank
+        end
     end
   end
 
-  defp parse_suit(suit) when suit in @suits, do: {:ok, String.upcase(suit)}
-  defp parse_suit(_invalid_suit), do: {:error, :invalid_suit}
+  def suit_to_string(:clubs), do: "♣"
+  def suit_to_string(:diamonds), do: "♦"
+  def suit_to_string(:hearts), do: "♥"
+  def suit_to_string(:spades), do: "♠"
 
-  defp parse_rank("T"), do: {:ok, 10}
-  defp parse_rank("J"), do: {:ok, 11}
-  defp parse_rank("Q"), do: {:ok, 12}
-  defp parse_rank("K"), do: {:ok, 13}
-  defp parse_rank("1"), do: {:ok, 14}
-  defp parse_rank("A"), do: {:ok, 14}
-  defp parse_rank(rank) do
-    case Integer.parse(rank) do
-      {num, ""} when num in 2..14 -> {:ok, num}
-      _ -> {:error, :invalid_rank}
-    end
-  end
+  def print_card(card = %Poker.Card{}), do:
+    "[#{card.rank}#{suit_to_string(card.suit)}]"
 end
