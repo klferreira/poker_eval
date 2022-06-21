@@ -11,6 +11,13 @@ defmodule Poker.Hand do
     high_card
   )a
 
+  def of(bin) do
+    case String.split(bin, " ") do
+      [a, b] -> [Poker.Card.of(a), Poker.Card.of(b)]
+      _ -> nil
+    end
+  end
+
   def get_rank(hand, community) do
     with rank = rank_with(hand ++ community, @ordered_hands) do
       {hand, rank}
