@@ -30,8 +30,11 @@ defmodule Poker.Game do
 
       true ->
         case state.phase == :waiting_for_players && player_count >= 1 do
-          false -> state |> add_player(player)
-          true -> state |> add_player(player) |> set_game_phase(:ready_to_start)
+          false -> add_player(state, player)
+          true ->
+            state
+            |> add_player(player)
+            |> set_game_phase(:ready_to_start)
         end
     end
   end
@@ -39,18 +42,19 @@ defmodule Poker.Game do
   def start(state = %Poker.Game{}) do
     player_count = length(state.players)
 
-    updated_state =
-      case player_count > 1 do
-        false -> {:failed, :insufficient_players}
-        true -> set_game_phase(state, :pre_flop)
-      end
-
-    run_phase(updated_state)
+    case player_count > 1 do
+      false -> {:failed, :insufficient_players}
+      true -> start_next_phase(state)
+    end
   end
 
-  def run_phase(state = %Poker.Game{}) do
+  def start_next_phase(state = %Poker.Game{}) do
     case state.phase do
-      :pre_flop -> pre_flop(state)
+      :ready_to_start -> pre_flop(state)
+      :pre_flop -> flop(state)
+      :flop -> turn(state)
+      :turn -> river(state)
+      :river -> pre_flop(state)
       _ -> {:failed, :unknown_phase}
     end
   end
@@ -105,17 +109,20 @@ defmodule Poker.Game do
             {:error, :insufficient_chips}
 
           true ->
-            state
-            |> set_player_data(%{player | chips: player.chips - amount})
-            |> set_bets([{player_id, amount} | state.bets])
+            updated_state =
+              state
+              |> set_player_data(%{player | chips: player.chips - amount})
+              |> set_bets([{player_id, amount} | state.bets])
+
+            {:ok, updated_state}
         end
     end
   end
 
   defp total_player_bet(state = %Game{}, player_id) do
     state.bets
-      |> Enum.filter(fn {id, _amount} -> id == player_id end)
-      |> Enum.reduce(0, fn {_id, amount}, total -> total + amount end)
+    |> Enum.filter(fn {id, _amount} -> id == player_id end)
+    |> Enum.reduce(0, fn {_id, amount}, total -> total + amount end)
   end
 
   defp deal_player_cards(state) do
@@ -138,16 +145,35 @@ defmodule Poker.Game do
 
       player_pids = Enum.map(re_ordered_players, fn player -> player.pid end)
 
-      state
-      |> place_bet(first.pid, state.small_blind)
-      |> place_bet(second.pid, state.small_blind * 2)
-      |> set_action_queue(player_pids)
-      |> deal_player_cards()
+      with state_0 <- state,
+           {:ok, state_1} <- place_bet(state_0, first.pid, state.small_blind),
+           {:ok, state_2} <- place_bet(state_1, second.pid, state.small_blind * 2) do
+        state_2
+        |> set_action_queue(player_pids)
+        |> deal_player_cards()
+      else
+        err -> err
+      end
     end
   end
 
+  def flop(_state = %Poker.Game{}) do
+    # show three cards
+    # place players in the action queue
+  end
+
+  def turn(_state = %Poker.Game{}) do
+    # show one card
+    # place players in the action queue
+  end
+
+  def river(_state = %Poker.Game{}) do
+    # show one card
+    # place players in the action queue
+  end
+
   def take_action(state = %Poker.Game{}, player_id, :call) do
-    with [{_player_id, last_bet_amount} | _] <- state.bets,
+    with [{_, last_bet_amount} | _] <- state.bets,
          [expected_player_id | remaining_players] <- state.action_queue do
       case expected_player_id == player_id do
         false ->
@@ -155,9 +181,12 @@ defmodule Poker.Game do
 
         true ->
           current_bet = total_player_bet(state, player_id)
-          state
-          |> place_bet(player_id, last_bet_amount - current_bet)
-          |> set_action_queue(remaining_players)
+
+          with {:ok, state_0} <- place_bet(state, player_id, last_bet_amount - current_bet) do
+            set_action_queue(state_0, remaining_players)
+          else
+            err -> err
+          end
       end
     end
   end

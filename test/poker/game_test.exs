@@ -161,6 +161,22 @@ defmodule Poker.GameTest do
 
       assert p1.chips == player1.chips - game.small_blind * 2
     end
+
+    test "returns error if player chips are insufficient" do
+      p1 = create_player(pid: :c.pid(0, 250, 0), name: "Cortabrisa", chips: 500)
+      p2 = create_player(pid: :c.pid(0, 251, 0), name: "Cortabrisa", chips: 500)
+      p3 = create_player(pid: :c.pid(0, 252, 0), name: "Cortabrisa", chips: 10)
+
+      result =
+        Game.create()
+        |> Game.join(p1)
+        |> Game.join(p2)
+        |> Game.join(p3)
+        |> Game.start()
+        |> Game.take_action(p3.pid, :call)
+
+      assert result == {:error, :insufficient_chips}
+    end
   end
 
   describe "raise/2" do
