@@ -177,7 +177,7 @@ defmodule Poker.Game do
          [expected_player_id | remaining_players] <- state.action_queue do
       case expected_player_id == player_id do
         false ->
-          {:error, :unexpected_action, player_id}
+          {:error, :unexpected_action}
 
         true ->
           current_bet = total_player_bet(state, player_id)
@@ -200,9 +200,13 @@ defmodule Poker.Game do
         true ->
           case state.bets do
             [] -> set_action_queue(state, remaining_players)
-            false -> {:error, :unexpected_action, player_id}
+            false -> {:error, :invalid_action}
           end
       end
     end
   end
+
+  # def take_action(state = %Poker.Game{}, player_id, :raise) do
+
+  # end
 end

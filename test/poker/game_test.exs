@@ -108,9 +108,10 @@ defmodule Poker.GameTest do
     end
   end
 
-  @tag :pending
   describe "check/2" do
+    test "" do
 
+    end
   end
 
   describe "call/2" do
@@ -164,8 +165,8 @@ defmodule Poker.GameTest do
 
     test "returns error if player chips are insufficient" do
       p1 = create_player(pid: :c.pid(0, 250, 0), name: "Cortabrisa", chips: 500)
-      p2 = create_player(pid: :c.pid(0, 251, 0), name: "Cortabrisa", chips: 500)
-      p3 = create_player(pid: :c.pid(0, 252, 0), name: "Cortabrisa", chips: 10)
+      p2 = create_player(pid: :c.pid(0, 251, 0), name: "Zé da Picareta", chips: 500)
+      p3 = create_player(pid: :c.pid(0, 252, 0), name: "Mr Xistudo", chips: 10)
 
       result =
         Game.create()
@@ -176,6 +177,16 @@ defmodule Poker.GameTest do
         |> Game.take_action(p3.pid, :call)
 
       assert result == {:error, :insufficient_chips}
+    end
+
+    test "returns error if player action is not expected", context do
+      [player1, _, _] = context[:players]
+
+      result =
+        context[:game]
+        |> Game.take_action(player1.pid, :call)
+
+      assert result == {:error, :unexpected_action}
     end
   end
 
